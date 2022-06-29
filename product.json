@@ -74,5 +74,14 @@
 				"publisherDisplayName": "Microsoft"
 			}
 		}
-	]
+	],
+	"extensionsGallery": {
+		"serviceUrl": "https://open-vsx.gitpod.io/vscode/gallery",
+		"itemUrl": "https://open-vsx.gitpod.io/vscode/item",
+		"resourceUrlTemplate": "https://open-vsx.gitpod.io/vscode/asset/{publisher}/{name}/{version}/Microsoft.VisualStudio.Code.WebResources/{path}",
+		"controlUrl": "",
+		"recommendationsUrl": "",
+		"nlsBaseUrl": "",
+		"publisherUrl": ""
+	}
 }
