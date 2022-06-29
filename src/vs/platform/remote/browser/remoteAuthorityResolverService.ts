@@ -20,17 +20,24 @@ export class RemoteAuthorityResolverService extends Disposable implements IRemot
 
 	private readonly _cache: Map<string, ResolverResult>;
 	private readonly _connectionToken: string | undefined;
+	private readonly _serverRootPrefix: string | undefined;
 	private readonly _connectionTokens: Map<string, string>;
+	private readonly _serverRootPrefixes: Map<string, string | undefined>;
 
-	constructor(@IProductService productService: IProductService, connectionToken: string | undefined, resourceUriProvider: ((uri: URI) => URI) | undefined) {
+	constructor(
+		@IProductService private _productService: IProductService,
+		connectionToken: string | undefined,
+		resourceUriProvider: ((uri: URI) => URI) | undefined,
+		serverRootPrefix: string | undefined) {
 		super();
 		this._cache = new Map<string, ResolverResult>();
 		this._connectionToken = connectionToken;
+		this._serverRootPrefix = serverRootPrefix;
 		this._connectionTokens = new Map<string, string>();
+		this._serverRootPrefixes = new Map<string, string | undefined>();
 		if (resourceUriProvider) {
 			RemoteAuthorities.setDelegate(resourceUriProvider);
 		}
-		RemoteAuthorities.setServerRootPath(getRemoteServerRootPath(productService));
 	}
 
 	async resolveAuthority(authority: string): Promise<ResolverResult> {
@@ -62,12 +69,13 @@ export class RemoteAuthorityResolverService extends Disposable implements IRemot
 
 	private _doResolveAuthority(authority: string): ResolverResult {
 		const connectionToken = this._connectionTokens.get(authority) || this._connectionToken;
+		const serverRootPrefix = this._serverRootPrefixes.get(authority) || this._serverRootPrefix;
 		if (authority.indexOf(':') >= 0) {
 			const pieces = authority.split(':');
-			return { authority: { authority, host: pieces[0], port: parseInt(pieces[1], 10), connectionToken } };
+			return { authority: { authority, host: pieces[0], port: parseInt(pieces[1], 10), connectionToken, serverRootPrefix } };
 		}
 		const port = (/^https:/.test(window.location.href) ? 443 : 80);
-		return { authority: { authority, host: authority, port: port, connectionToken } };
+		return { authority: { authority, host: authority, port: port, connectionToken, serverRootPrefix } };
 	}
 
 	_clearResolvedAuthority(authority: string): void {
@@ -82,6 +90,12 @@ export class RemoteAuthorityResolverService extends Disposable implements IRemot
 	_setAuthorityConnectionToken(authority: string, connectionToken: string): void {
 		this._connectionTokens.set(authority, connectionToken);
 		RemoteAuthorities.setConnectionToken(authority, connectionToken);
+		this._onDidChangeConnectionData.fire();
+	}
+
+	_setAuthorityServerRootPath(authority: string, serverRootPrefix: string | undefined): void {
+		this._serverRootPrefixes.set(authority, serverRootPrefix);
+		RemoteAuthorities.setServerRootPath(authority, getRemoteServerRootPath(this._productService, serverRootPrefix));
 		this._onDidChangeConnectionData.fire();
 	}
 

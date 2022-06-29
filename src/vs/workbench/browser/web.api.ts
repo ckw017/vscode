@@ -128,6 +128,11 @@ export interface IWorkbenchConstructionOptions {
 	readonly connectionToken?: string;
 
 	/**
+	 * The server root prefix.
+	 */
+	readonly serverRootPrefix?: string;
+
+	/**
 	 * An endpoint to serve iframe content ("webview") from. This is required
 	 * to provide full security isolation from the workbench host.
 	 */

@@ -456,8 +456,9 @@ export class ResolvedAuthority {
 	readonly host: string;
 	readonly port: number;
 	readonly connectionToken: string | undefined;
+	readonly serverRootPrefix: string | undefined;
 
-	constructor(host: string, port: number, connectionToken?: string) {
+	constructor(host: string, port: number, serverRootPrefix: string | undefined, connectionToken?: string) {
 		if (typeof host !== 'string' || host.length === 0) {
 			throw illegalArgument('host');
 		}
@@ -472,6 +473,7 @@ export class ResolvedAuthority {
 		this.host = host;
 		this.port = Math.round(port);
 		this.connectionToken = connectionToken;
+		this.serverRootPrefix = serverRootPrefix;
 	}
 }
 

@@ -61,7 +61,7 @@ export abstract class AbstractExtensionResourceLoaderService implements IExtensi
 		private readonly _environmentService: IEnvironmentService,
 		private readonly _configurationService: IConfigurationService,
 	) {
-		this._webExtensionResourceEndPoint = `${getRemoteServerRootPath(_productService)}/${WEB_EXTENSION_RESOURCE_END_POINT}/`;
+		this._webExtensionResourceEndPoint = `${getRemoteServerRootPath(_productService, undefined)}/${WEB_EXTENSION_RESOURCE_END_POINT}/`;
 		if (_productService.extensionsGallery) {
 			this._extensionGalleryResourceUrlTemplate = _productService.extensionsGallery.resourceUrlTemplate;
 			this._extensionGalleryAuthority = this._extensionGalleryResourceUrlTemplate ? this._getExtensionGalleryAuthority(URI.parse(this._extensionGalleryResourceUrlTemplate)) : undefined;

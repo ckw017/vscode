@@ -22,6 +22,7 @@ declare module 'vscode' {
 		readonly host: string;
 		readonly port: number;
 		readonly connectionToken: string | undefined;
+		readonly serverRootPrefix: string | undefined;
 
 		constructor(host: string, port: number, connectionToken?: string);
 	}

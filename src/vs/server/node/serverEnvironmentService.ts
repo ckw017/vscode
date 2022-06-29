@@ -84,6 +84,8 @@ export const serverOptions: OptionDescriptions<ServerParsedArgs> = {
 
 	'compatibility': { type: 'string' },
 
+	'server-root-prefix': { type: 'string' },
+
 	_: OPTIONS['_']
 };
 
@@ -189,6 +191,8 @@ export interface ServerParsedArgs {
 
 	'use-host-proxy'?: boolean;
 	'without-browser-env-var'?: boolean;
+
+	'server-root-prefix'?: string;
 
 	/* ----- server cli ----- */
 	help: boolean;

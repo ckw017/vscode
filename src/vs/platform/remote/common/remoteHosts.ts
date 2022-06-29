@@ -28,8 +28,10 @@ export function getRemoteName(authority: string | undefined): string | undefined
 /**
  * The root path to use when accessing the remote server. The path contains the quality and commit of the current build.
  * @param product
+ * @param serverRootPrefix
  * @returns
  */
-export function getRemoteServerRootPath(product: { quality?: string; commit?: string }): string {
-	return `/${product.quality ?? 'oss'}-${product.commit ?? 'dev'}`;
+export function getRemoteServerRootPath(product: { quality?: string; commit?: string }, serverRootPrefix: string | undefined): string {
+	const prefix = serverRootPrefix ? `/${serverRootPrefix}` : '';
+	return `${prefix}/${product.quality ?? 'oss'}-${product.commit ?? 'dev'}`;
 }

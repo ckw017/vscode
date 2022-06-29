@@ -181,7 +181,8 @@ export async function setupServerServices(connectionToken: ServerConnectionToken
 	instantiationService.invokeFunction(accessor => {
 		const extensionManagementService = accessor.get(IExtensionManagementService);
 		const extensionsScannerService = accessor.get(IExtensionsScannerService);
-		const remoteExtensionEnvironmentChannel = new RemoteAgentEnvironmentChannel(connectionToken, environmentService, extensionManagementCLIService, logService, extensionHostStatusService, extensionsScannerService);
+		const serverRootPrefix = args['server-root-prefix'];
+		const remoteExtensionEnvironmentChannel = new RemoteAgentEnvironmentChannel(connectionToken, environmentService, extensionManagementCLIService, logService, extensionHostStatusService, extensionsScannerService, serverRootPrefix);
 		socketServer.registerChannel('remoteextensionsenvironment', remoteExtensionEnvironmentChannel);
 
 		const telemetryChannel = new ServerTelemetryChannel(accessor.get(IServerTelemetryService), appInsightsAppender);

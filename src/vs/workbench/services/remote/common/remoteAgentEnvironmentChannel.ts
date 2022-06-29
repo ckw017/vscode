@@ -39,6 +39,7 @@ export interface IScanSingleExtensionArguments {
 export interface IRemoteAgentEnvironmentDTO {
 	pid: number;
 	connectionToken: string;
+	serverRootPrefix: string | undefined;
 	appRoot: UriComponents;
 	settingsPath: UriComponents;
 	logsPath: UriComponents;
@@ -66,6 +67,7 @@ export class RemoteExtensionEnvironmentChannelClient {
 		return {
 			pid: data.pid,
 			connectionToken: data.connectionToken,
+			serverRootPrefix: data.serverRootPrefix,
 			appRoot: URI.revive(data.appRoot),
 			settingsPath: URI.revive(data.settingsPath),
 			logsPath: URI.revive(data.logsPath),

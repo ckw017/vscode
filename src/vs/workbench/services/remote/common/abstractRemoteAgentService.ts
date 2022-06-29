@@ -61,6 +61,7 @@ export abstract class AbstractRemoteAgentService extends Disposable implements I
 				async (channel, connection) => {
 					const env = await RemoteExtensionEnvironmentChannelClient.getEnvironmentData(channel, connection.remoteAuthority);
 					this._remoteAuthorityResolverService._setAuthorityConnectionToken(connection.remoteAuthority, env.connectionToken);
+					this._remoteAuthorityResolverService._setAuthorityServerRootPath(connection.remoteAuthority, env.serverRootPrefix);
 					return env;
 				},
 				null
@@ -225,7 +226,7 @@ export class RemoteAgentConnection extends Disposable implements IRemoteAgentCon
 						this._onReconnecting.fire(undefined);
 					}
 					const { authority } = await this._remoteAuthorityResolverService.resolveAuthority(this.remoteAuthority);
-					return { host: authority.host, port: authority.port, connectionToken: authority.connectionToken };
+					return { host: authority.host, port: authority.port, connectionToken: authority.connectionToken, serverRootPrefix: authority.serverRootPrefix };
 				}
 			},
 			signService: this._signService,
