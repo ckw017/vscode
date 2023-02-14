@@ -15,6 +15,7 @@ export interface ResolvedAuthority {
 	readonly host: string;
 	readonly port: number;
 	readonly connectionToken: string | undefined;
+	readonly serverRootPrefix: string | undefined;
 }
 
 export interface ResolvedOptions {
@@ -120,5 +121,6 @@ export interface IRemoteAuthorityResolverService {
 	_setResolvedAuthority(resolvedAuthority: ResolvedAuthority, resolvedOptions?: ResolvedOptions): void;
 	_setResolvedAuthorityError(authority: string, err: any): void;
 	_setAuthorityConnectionToken(authority: string, connectionToken: string): void;
+	_setAuthorityServerRootPath(authority: string, serverRootPath: string | undefined): void;
 	_setCanonicalURIProvider(provider: (uri: URI) => Promise<URI>): void;
 }

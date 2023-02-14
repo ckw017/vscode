@@ -355,7 +355,8 @@ export abstract class ElectronExtensionService extends AbstractExtensionService 
 					authority: remoteAuthority,
 					host: remoteAuthority.substring(0, lastColon),
 					port: parseInt(remoteAuthority.substring(lastColon + 1), 10),
-					connectionToken: undefined
+					connectionToken: undefined,
+					serverRootPrefix: undefined,
 				}
 			};
 		}

@@ -80,6 +80,7 @@ interface ISimpleConnectionOptions {
 	socketFactory: ISocketFactory;
 	signService: ISignService;
 	logService: ILogService;
+	serverRootPrefix: string | undefined;
 }
 
 export interface IConnectCallback {
@@ -233,7 +234,7 @@ async function connectToRemoteExtensionHostAgent(options: ISimpleConnectionOptio
 
 	let socket: ISocket;
 	try {
-		socket = await createSocket(options.logService, options.socketFactory, options.host, options.port, getRemoteServerRootPath(options), `reconnectionToken=${options.reconnectionToken}&reconnection=${options.reconnectionProtocol ? 'true' : 'false'}`, `renderer-${connectionTypeToString(connectionType)}-${options.reconnectionToken}`, timeoutCancellationToken);
+		socket = await createSocket(options.logService, options.socketFactory, options.host, options.port, getRemoteServerRootPath(options, options.serverRootPrefix), `reconnectionToken=${options.reconnectionToken}&reconnection=${options.reconnectionProtocol ? 'true' : 'false'}`, `renderer-${connectionTypeToString(connectionType)}-${options.reconnectionToken}`, timeoutCancellationToken);
 	} catch (error) {
 		options.logService.error(`${logPrefix} socketFactory.connect() failed or timed out. Error:`);
 		options.logService.error(error);
@@ -391,7 +392,7 @@ export interface IConnectionOptions {
 }
 
 async function resolveConnectionOptions(options: IConnectionOptions, reconnectionToken: string, reconnectionProtocol: PersistentProtocol | null): Promise<ISimpleConnectionOptions> {
-	const { host, port, connectionToken } = await options.addressProvider.getAddress();
+	const { host, port, connectionToken, serverRootPrefix } = await options.addressProvider.getAddress();
 	return {
 		commit: options.commit,
 		quality: options.quality,
@@ -402,7 +403,8 @@ async function resolveConnectionOptions(options: IConnectionOptions, reconnectio
 		reconnectionProtocol: reconnectionProtocol,
 		socketFactory: options.socketFactory,
 		signService: options.signService,
-		logService: options.logService
+		logService: options.logService,
+		serverRootPrefix: serverRootPrefix,
 	};
 }
 
@@ -410,6 +412,7 @@ export interface IAddress {
 	host: string;
 	port: number;
 	connectionToken: string | undefined;
+	serverRootPrefix: string | undefined;
 }
 
 export interface IAddressProvider {

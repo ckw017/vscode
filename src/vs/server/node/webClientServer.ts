@@ -102,13 +102,14 @@ export class WebClientServer {
 
 	constructor(
 		private readonly _connectionToken: ServerConnectionToken,
+		private readonly _serverRootPrefix: string | undefined,
 		@IServerEnvironmentService private readonly _environmentService: IServerEnvironmentService,
 		@ILogService private readonly _logService: ILogService,
 		@IRequestService private readonly _requestService: IRequestService,
 		@IProductService private readonly _productService: IProductService,
 	) {
 		this._webExtensionResourceUrlTemplate = this._productService.extensionsGallery?.resourceUrlTemplate ? URI.parse(this._productService.extensionsGallery.resourceUrlTemplate) : undefined;
-		const serverRootPath = getRemoteServerRootPath(_productService);
+		const serverRootPath = getRemoteServerRootPath(_productService, this._serverRootPrefix);
 		this._staticRoute = `${serverRootPath}/static`;
 		this._callbackRoute = `${serverRootPath}/callback`;
 		this._webExtensionRoute = `${serverRootPath}/web-extension-resource`;
@@ -126,7 +127,8 @@ export class WebClientServer {
 			if (pathname.startsWith(this._staticRoute) && pathname.charCodeAt(this._staticRoute.length) === CharCode.Slash) {
 				return this._handleStatic(req, res, parsedUrl);
 			}
-			if (pathname === '/') {
+			const rootPath = this._serverRootPrefix ? `/${this._serverRootPrefix}` : '/';
+			if (pathname === rootPath) {
 				return this._handleRoot(req, res, parsedUrl);
 			}
 			if (pathname === this._callbackRoute) {
@@ -260,7 +262,7 @@ export class WebClientServer {
 					newQuery[key] = parsedUrl.query[key];
 				}
 			}
-			const newLocation = url.format({ pathname: '/', query: newQuery });
+			const newLocation = url.format({ pathname: this._serverRootPrefix ?? '/', query: newQuery });
 			responseHeaders['Location'] = newLocation;
 
 			res.writeHead(302, responseHeaders);

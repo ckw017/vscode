@@ -96,7 +96,7 @@ export class RemoteExtensionHost extends Disposable implements IExtensionHost {
 			addressProvider: {
 				getAddress: async () => {
 					const { authority } = await this.remoteAuthorityResolverService.resolveAuthority(this._initDataProvider.remoteAuthority);
-					return { host: authority.host, port: authority.port, connectionToken: authority.connectionToken };
+					return { host: authority.host, port: authority.port, connectionToken: authority.connectionToken, serverRootPrefix: authority.serverRootPrefix };
 				}
 			},
 			signService: this._signService,

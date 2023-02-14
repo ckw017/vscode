@@ -488,7 +488,8 @@ class Extensions extends Disposable {
 	}
 
 	private async mapInstalledExtensionWithCompatibleGalleryExtension(galleryExtensions: IGalleryExtension[]): Promise<[Extension, IGalleryExtension][]> {
-		const mappedExtensions = this.mapInstalledExtensionWithGalleryExtension(galleryExtensions);
+		// don't update built-in extensions
+		const mappedExtensions = this.mapInstalledExtensionWithGalleryExtension(galleryExtensions).filter(([ext]) => !ext.isBuiltin);
 		const targetPlatform = await this.server.extensionManagementService.getTargetPlatform();
 		const compatibleGalleryExtensions: IGalleryExtension[] = [];
 		const compatibleGalleryExtensionsToFetch: IExtensionInfo[] = [];

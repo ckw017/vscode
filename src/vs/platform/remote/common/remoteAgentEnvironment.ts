@@ -10,6 +10,7 @@ import { URI } from 'vs/base/common/uri';
 export interface IRemoteAgentEnvironment {
 	pid: number;
 	connectionToken: string;
+	serverRootPrefix: string | undefined;
 	appRoot: URI;
 	settingsPath: URI;
 	logsPath: URI;

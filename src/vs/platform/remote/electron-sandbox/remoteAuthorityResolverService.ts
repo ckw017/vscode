@@ -48,16 +48,16 @@ export class RemoteAuthorityResolverService extends Disposable implements IRemot
 	private readonly _resolveAuthorityRequests: Map<string, PendingPromise<string, ResolverResult>>;
 	private readonly _connectionTokens: Map<string, string>;
 	private readonly _canonicalURIRequests: Map<string, PendingPromise<URI, URI>>;
+	private readonly _serverRootPrefixes: Map<string, string | undefined>;
 	private _canonicalURIProvider: ((uri: URI) => Promise<URI>) | null;
 
-	constructor(@IProductService productService: IProductService) {
+	constructor(@IProductService private _productService: IProductService) {
 		super();
 		this._resolveAuthorityRequests = new Map<string, PendingPromise<string, ResolverResult>>();
 		this._connectionTokens = new Map<string, string>();
 		this._canonicalURIRequests = new Map<string, PendingPromise<URI, URI>>();
 		this._canonicalURIProvider = null;
-
-		RemoteAuthorities.setServerRootPath(getRemoteServerRootPath(productService));
+		this._serverRootPrefixes = new Map<string, string | undefined>();
 	}
 
 	resolveAuthority(authority: string): Promise<ResolverResult> {
@@ -125,6 +125,12 @@ export class RemoteAuthorityResolverService extends Disposable implements IRemot
 	_setAuthorityConnectionToken(authority: string, connectionToken: string): void {
 		this._connectionTokens.set(authority, connectionToken);
 		RemoteAuthorities.setConnectionToken(authority, connectionToken);
+		this._onDidChangeConnectionData.fire();
+	}
+
+	_setAuthorityServerRootPath(authority: string, serverRootPrefix: string | undefined): void {
+		this._serverRootPrefixes.set(authority, serverRootPrefix);
+		RemoteAuthorities.setServerRootPath(authority, getRemoteServerRootPath(this._productService, serverRootPrefix));
 		this._onDidChangeConnectionData.fire();
 	}
 

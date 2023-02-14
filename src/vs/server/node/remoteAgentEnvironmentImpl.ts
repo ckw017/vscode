@@ -41,6 +41,7 @@ export class RemoteAgentEnvironmentChannel implements IServerChannel {
 		private readonly _logService: ILogService,
 		private readonly _extensionHostStatusService: IExtensionHostStatusService,
 		private readonly _extensionsScannerService: IExtensionsScannerService,
+		private readonly _serverRootPrefix: string | undefined,
 	) {
 		if (_environmentService.args['install-builtin-extension']) {
 			const installOptions: InstallOptions = { isMachineScoped: !!_environmentService.args['do-not-sync'], installPreReleaseVersion: !!_environmentService.args['pre-release'] };
@@ -285,6 +286,7 @@ export class RemoteAgentEnvironmentChannel implements IServerChannel {
 		return {
 			pid: process.pid,
 			connectionToken: (this._connectionToken.type !== ServerConnectionTokenType.None ? this._connectionToken.value : ''),
+			serverRootPrefix: this._serverRootPrefix,
 			appRoot: URI.file(this._environmentService.appRoot),
 			settingsPath: this._environmentService.machineSettingsResource,
 			logsPath: URI.file(this._environmentService.logsPath),
